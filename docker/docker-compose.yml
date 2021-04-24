@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+  traefik-reverse-proxy:
+    container_name: traefik
+    image: traefik:v2.2.1
+    command:
+      - --api=true
+      - --api.dashboard=true
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.websecure.http.tls.domains[0].main=vaccini.vivedo.me
+      - --entrypoints.websecure.http.tls.domains[0].sans=*.vaccini.vivedo.me
+      - --log=true
+      - --log.level=ERROR
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=web
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+    expose:
+        - 8080
+    labels:
+      - traefik.enable=true
+      - traefik.network=web
+      - traefik.port=8080
+      - traefik.http.routers.traefik.service=api@internal
+      - traefik.http.routers.traefik.rule=Host(`traefik.vaccini.vivedo.me`)
+      - traefik.http.routers.traefik.middlewares=traefik-auth
+      - traefik.http.middlewares.traefik-auth.basicauth.users=vivedo:$apr1$a8e9jldg$vrJjO1afcGT7qP4sH5tj2/
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./acme.json:/acme.json
+
+  
