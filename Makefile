@@ -1,4 +1,4 @@
-PROJECT_NAME=`vaccinator_proxy`
+PROJECT_NAME=vaccinator_proxy
 
 COMPOSE=docker-compose --project-name=$(PROJECT_NAME) -f docker/docker-compose.yml
 DEVCOMPOSE=$(COMPOSE) -f docker/docker-compose.dev.yml
