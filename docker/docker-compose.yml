@@ -28,8 +28,8 @@ services:
       - traefik.port=8080
       - traefik.http.routers.traefik.service=api@internal
       - traefik.http.routers.traefik.rule=Host(`traefik.vaccini.vivedo.me`)
-      - traefik.http.routers.traefik.middlewares=traefik-auth
-      - traefik.http.middlewares.traefik-auth.basicauth.users=vivedo:$apr1$akexzyps$DJxf6DsmdKhF1tGNp6s091
+#      - traefik.http.routers.traefik.middlewares=traefik-auth
+#      - traefik.http.middlewares.traefik-auth.basicauth.users=vivedo:$apr1$akexzyps$DJxf6DsmdKhF1tGNp6s091
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./acme.json:/acme.json
