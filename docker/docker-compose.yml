@@ -33,7 +33,6 @@ services:
       - traefik.port=8080
       - traefik.http.routers.traefik.service=api@internal
       - traefik.http.routers.traefik.rule=Host(`traefik.vaccini.vivedo.me`)
-      - traefik.http.routers.traefik.entrypoints=websecure
       - traefik.http.routers.traefik.tls.certresolver=secure
       - traefik.http.routers.traefik.middlewares=httpsredirect
 
