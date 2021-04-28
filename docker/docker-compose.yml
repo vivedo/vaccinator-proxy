@@ -27,6 +27,7 @@ services:
     expose:
         - 8080
     labels:
+      - traefik.http.middlewares.httpsredirect.redirectscheme.scheme=https
       - traefik.enable=true
       - traefik.network=web
       - traefik.port=8080
@@ -34,6 +35,10 @@ services:
       - traefik.http.routers.traefik.rule=Host(`traefik.vaccini.vivedo.me`)
       - traefik.http.routers.traefik.entrypoints=websecure
       - traefik.http.routers.traefik.tls.certresolver=secure
+      - traefik.http.routers.traefik.middlewares=httpsredirect
+
+      
+
 #      - traefik.http.routers.traefik.middlewares=traefik-auth
 #      - traefik.http.middlewares.traefik-auth.basicauth.users=vivedo:$apr1$akexzyps$DJxf6DsmdKhF1tGNp6s091
     volumes:
