@@ -28,6 +28,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - web
+    environment:
+      DEFAULT_EMAIL: edoardo.viviani@gmail.com
 
 volumes:
   conf:
