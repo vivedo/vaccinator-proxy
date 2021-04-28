@@ -24,10 +24,11 @@ services:
       - letsencrypt:/etc/letsencrypt
       - certbot:/var/www/certbot
     restart: unless-stopped
-    entrypoint: /bin/sh -c "trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;"
     depends_on:
       - nginx-proxy
-    command: sh -c "certbot certonly --webroot --webroot-path=/var/www/certbot --email edoardo.viviani@gmail.com --agree-tos --no-eff-email --staging -d vaccini.vivedo.me -d api.vaccini.vivedo.me -d pgadmin.vaccini.vivedo.me"
+    #command: sh -c "certbot certonly --webroot --webroot-path=/var/www/certbot --email edoardo.viviani@gmail.com --agree-tos --no-eff-email --staging -d vaccini.vivedo.me -d api.vaccini.vivedo.me -d pgadmin.vaccini.vivedo.me"
+    entrypoint: /bin/sh -c "trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;"
+
 
 volumes:
   letsencrypt:
