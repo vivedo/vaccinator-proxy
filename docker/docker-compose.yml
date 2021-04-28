@@ -3,7 +3,7 @@ version: "3.7"
 services:
   traefik-reverse-proxy:
     container_name: traefik
-    image: traefik:v2.2.1
+    image: traefik:v2.4
     command:
       - --api=true
       - --api.dashboard=true
@@ -16,6 +16,10 @@ services:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --providers.docker.network=web
+      - "--certificatesresolvers.secure.acme.email=edoardo.viviani@gmail.com"
+      - "--certificatesresolvers.secure.acme.storage=/acme.json"
+      - "--certificatesresolvers.secure.acme.tlschallenge=true"
+
     restart: unless-stopped
     ports:
       - '80:80'
@@ -32,8 +36,7 @@ services:
 #      - traefik.http.middlewares.traefik-auth.basicauth.users=vivedo:$apr1$akexzyps$DJxf6DsmdKhF1tGNp6s091
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ../acme.json:/acme.json
-      - ../traefik.toml:/traefik.toml
+      - ./acme.json:/acme.json
     networks:
       - web
 
