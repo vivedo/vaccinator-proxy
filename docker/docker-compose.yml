@@ -16,9 +16,12 @@ services:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --providers.docker.network=web
-      - "--certificatesresolvers.secure.acme.email=edoardo.viviani@gmail.com"
-      - "--certificatesresolvers.secure.acme.storage=/acme.json"
-      - "--certificatesresolvers.secure.acme.tlschallenge=true"
+      
+      - --certificatesresolvers.secure.acme.httpchallenge=true
+      - --certificatesresolvers.secure.acme.httpchallenge.entrypoint=web
+      - --certificatesresolvers.secure.acme.email=edoardo.viviani@gmail.com
+      - --certificatesresolvers.secure.acme.storage=/acme.json
+      - --certificatesresolvers.secure.acme.tlschallenge=true
 
     restart: unless-stopped
     ports:
@@ -33,12 +36,13 @@ services:
       - traefik.port=8080
       - traefik.http.routers.traefik.service=api@internal
       - traefik.http.routers.traefik.rule=Host(`traefik.vaccini.vivedo.me`)
-
+      
+      # middleware redirect  
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"  
       # global redirect to https  
-      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:[a-z-.]+}`)"
-      - "traefik.http.routers.http-catchall.entrypoints=web"
-      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"  
+      - "traefik.http.routers.redirs.entrypoints=web"  
+      - "traefik.http.routers.redirs.middlewares=redirect-to-https"  
 
       
 
