@@ -5,17 +5,34 @@ services:
     container_name: traefik
     image: traefik:v2.2.1
     command:
+      # - --api=true
+      # - --api.dashboard=true
+      # - --entrypoints.web.address=:80
+      # - --entrypoints.websecure.address=:443
+      # - --entrypoints.websecure.http.tls.domains[0].main=vaccini.vivedo.me
+      # - --entrypoints.websecure.http.tls.domains[0].sans=*.vaccini.vivedo.me
+      # - --log=true
+      # - --log.level=ERROR
+      # - --providers.docker=true
+      # - --providers.docker.exposedbydefault=false
+      # - --providers.docker.network=web
+      - --debug=false
+      - --logLevel=ERROR
       - --api=true
-      - --api.dashboard=true
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-      - --entrypoints.websecure.http.tls.domains[0].main=vaccini.vivedo.me
-      - --entrypoints.websecure.http.tls.domains[0].sans=*.vaccini.vivedo.me
-      - --log=true
-      - --log.level=ERROR
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      - --providers.docker.network=web
+       - --api.dashboard=true
+      - --defaultentrypoints=https,http
+      - --entryPoints=Name:http Address::80 Redirect.EntryPoint:https
+      - --entryPoints=Name:https Address::443 TLS
+      - --retry
+      - --docker.endpoint=unix:///var/run/docker.sock
+      - --docker.domain=vaccini.vivedo.me
+      - --docker.watch=true
+      - --docker.exposedbydefault=false
+      - --acme.email=edoardo.viviani@gmail.com
+      - --acme.storage=acme.json
+      - --acme.entryPoint=https
+      - --acme.onHostRule=true
+      - --acme.httpchallenge.entrypoint=http
     restart: unless-stopped
     ports:
       - '80:80'
