@@ -16,7 +16,8 @@ services:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --providers.docker.network=web
-      
+
+      - --certificatesresolvers.secure.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
       - --certificatesresolvers.secure.acme.httpchallenge=true
       - --certificatesresolvers.secure.acme.httpchallenge.entrypoint=web
       - --certificatesresolvers.secure.acme.email=edoardo.viviani@gmail.com
