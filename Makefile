@@ -1,48 +1,26 @@
 PROJECT_NAME=vaccinator_proxy
 
 COMPOSE=docker-compose --project-name=$(PROJECT_NAME) -f docker/docker-compose.yml
-DEVCOMPOSE=$(COMPOSE) -f docker/docker-compose.dev.yml
-PRODCOMPOSE=$(COMPOSE) -f docker/docker-compose.prod.yml
 
 ###############
 # PRODCOMPOSE #
 ###############
 
-.PHONY: produp
+.PHONY: up
 produp: 
-	$(PRODCOMPOSE) up
+	$(COMPOSE) up
 
-.PHONY: produpd
+.PHONY: upd
 produpd: 
-	$(PRODCOMPOSE) up -d
+	$(COMPOSE) up -d
 
-.PHONY: proddown
+.PHONY: down
 proddown: 
-	$(PRODCOMPOSE) down
+	$(COMPOSE) down
 
-.PHONY: prodbuild
+.PHONY: build
 prodbuild: 
-	$(PRODCOMPOSE) build
-
-##############
-# DEVCOMPOSE #
-##############
-
-.PHONY: devup
-devup: 
-	$(DEVCOMPOSE) up
-
-.PHONY: devupd
-devupd: 
-	$(DEVCOMPOSE) up -d
-
-.PHONY: devdown
-devdown: 
-	$(DEVCOMPOSE) down
-
-.PHONY: devbuild
-devbuild: 
-	$(DEVCOMPOSE) build
+	$(COMPOSE) build
 
 #############
 #   EXECs   #

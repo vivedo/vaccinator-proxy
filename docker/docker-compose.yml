@@ -1,62 +1,42 @@
-version: "3.7"
+version: '3.7'
 
 services:
-  traefik-reverse-proxy:
-    container_name: traefik
-    image: traefik:v2.4
-    command:
-      - --api=true
-      - --api.dashboard=true
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-      - --entrypoints.websecure.http.tls.domains[0].main=vaccini.vivedo.me
-      - --entrypoints.websecure.http.tls.domains[0].sans=*.vaccini.vivedo.me
-      - --log=true
-      - --log.level=ERROR
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      - --providers.docker.network=web
-
-      - --certificatesresolvers.secure.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
-      - --certificatesresolvers.secure.acme.httpchallenge=true
-      - --certificatesresolvers.secure.acme.httpchallenge.entrypoint=web
-      - --certificatesresolvers.secure.acme.email=edoardo.viviani@gmail.com
-      - --certificatesresolvers.secure.acme.storage=/acme.json
-      - --certificatesresolvers.secure.acme.tlschallenge=true
-
-    restart: unless-stopped
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy:alpine
+    container_name: nginx-proxy
     ports:
-      - '80:80'
-      - '443:443'
-    expose:
-        - 8080
-    labels:
-      - traefik.http.middlewares.httpsredirect.redirectscheme.scheme=https
-      - traefik.enable=true
-      - traefik.network=web
-      - traefik.port=8080
-      - traefik.http.routers.traefik.service=api@internal
-      - traefik.http.routers.traefik.rule=Host(`traefik.vaccini.vivedo.me`)
-      
-      # middleware redirect  
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"  
-      # global redirect to https  
-      - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"  
-      - "traefik.http.routers.redirs.entrypoints=web"  
-      - "traefik.http.routers.redirs.middlewares=redirect-to-https"  
-
-      
-
-#      - traefik.http.routers.traefik.middlewares=traefik-auth
-#      - traefik.http.middlewares.traefik-auth.basicauth.users=vivedo:$apr1$akexzyps$DJxf6DsmdKhF1tGNp6s091
+      - "80:80"
+      - "443:443"
     volumes:
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - dhparam:/etc/nginx/dhparam
+      - certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      networks:
+        - web
+
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - certs:/etc/nginx/certs:rw
+      - acme:/etc/acme.sh
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ../acme.json:/acme.json
     networks:
       - web
 
+volumes:
+  conf:
+  vhost:
+  html:
+  dhparam:
+  certs:
+  acme:
+
 networks:
   web:
-      external: true
-
-  
+    external: true
