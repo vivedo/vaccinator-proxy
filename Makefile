@@ -3,23 +3,23 @@ PROJECT_NAME=vaccinator_proxy
 COMPOSE=docker-compose --project-name=$(PROJECT_NAME) -f docker/docker-compose.yml
 
 ###############
-# PRODCOMPOSE #
+# COMPOSE #
 ###############
 
 .PHONY: up
-produp: 
+up: 
 	$(COMPOSE) up
 
 .PHONY: upd
-produpd: 
+upd: 
 	$(COMPOSE) up -d
 
 .PHONY: down
-proddown: 
+down: 
 	$(COMPOSE) down
 
 .PHONY: build
-prodbuild: 
+build: 
 	$(COMPOSE) build
 
 #############
