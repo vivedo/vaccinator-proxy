@@ -17,7 +17,7 @@ services:
 
   certbot:
     container_name: certbot
-    image: certbot/certbot
+    build: ../certbot
     networks:
       - web
     volumes:
