@@ -18,9 +18,9 @@ upd:
 down: 
 	$(COMPOSE) down
 
-.PHONY: build
-build: 
-	$(COMPOSE) build
+.PHONY: buildup
+buildup: 
+	$(COMPOSE) up --build --force-recreate
 
 #############
 #   EXECs   #
